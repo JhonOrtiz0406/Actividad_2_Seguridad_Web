@@ -16,19 +16,34 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        // Validar las credenciales recibidas
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
+        try {
+            // Validar los datos de entrada
+            $validated = $request->validate([
+                'email' => ['required', 'string', 'email', 'max:255'],
+                'password' => ['required', 'min:8'],
+            ]);
 
-        // Intentar autenticar al usuario
-        if (!Auth::attempt($request->only('email', 'password'))) {
-            // Si la autenticación falla, lanza un error 401
-            return response()->json(['error' => 'Credenciales no válidas'], 401);
+            // Intentar autenticar al usuario
+            if (!Auth::attempt($validated)) {
+                return response()->json(['message' => 'Credenciales inválidas'], 401);
+            }
+
+            // Si la autenticación es exitosa
+            return response()->json(['message' => 'Inicio de sesión exitoso'], 200);
+
+        } catch (ValidationException $e) {
+            // Capturar y devolver errores de validación
+            return response()->json([
+                'message' => 'Error de validación',
+                'errors' => $e->errors(),
+            ], 422);
+
+        } catch (\Exception $e) {
+            // Capturar cualquier otro error durante el login
+            return response()->json([
+                'message' => 'Ocurrió un error al iniciar sesión',
+                'error' => $e->getMessage(),
+            ], 500);
         }
-
-        // Si el login es exitoso, devolver un mensaje de éxito
-        return response()->json(['message' => 'Login exitoso']);
     }
 }
