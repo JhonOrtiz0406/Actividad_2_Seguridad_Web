@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
@@ -13,32 +13,22 @@ class AuthenticatedSessionController extends Controller
 {
     /**
      * Handle an incoming authentication request.
-     * @throws ValidationException
      */
-    public function store(LoginRequest $request): \Illuminate\Http\JsonResponse
+    public function store(Request $request): JsonResponse
     {
-        //Validacion del Request
-        $request->authenticate();
+        // Validar las credenciales recibidas
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
 
-        //Validacion de que no esten expiradas las credenciales
+        // Intentar autenticar al usuario
         if (!Auth::attempt($request->only('email', 'password'))) {
+            // Si la autenticación falla, lanza un error 401
             return response()->json(['error' => 'Credenciales no válidas'], 401);
         }
 
+        // Si el login es exitoso, devolver un mensaje de éxito
         return response()->json(['message' => 'Login exitoso']);
-    }
-
-    /**
-     * Destroy an authenticated session.
-     */
-    public function destroy(Request $request): Response
-    {
-        Auth::guard('web')->logout();
-
-        $request->session()->invalidate();
-
-        $request->session()->regenerateToken();
-
-        return response()->noContent();
     }
 }

@@ -4,41 +4,65 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
+use Illuminate\Validation\ValidationException;
 
 class RegisteredUserController extends Controller
 {
     /**
-     * Handle an incoming registration request.
+     * Maneja una solicitud de registro entrante.
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
-        $request->validate([
-            'name' => ['required', 'string', 'min:2', 'max:20', 'regex:/^[a-zA-Z]+$/'],
-            'lastname' => ['required', 'string', 'min:2', 'max:40', 'regex:/^[a-zA-Z]+$/'],
-            'dni' => ['required', 'regex:/^[0-9]{8}[A-Za-z]$/'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'confirmed', 'min:8', 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d@$!%*?&]{8,}$/'],
-            'phone' => ['nullable', 'regex:/^\+?[0-9]{9,12}$/'],
-            'country' => ['nullable', 'string'],
-            'about' => ['nullable', 'string', 'min:20', 'max:250'],
-        ]);
+        try {
+            // Validar los datos entrantes
+            $validated  = $request->validate([
+                'name' => ['required', 'string', 'min:2', 'max:20', 'regex:/^[a-zA-Z]+$/'],
+                'lastname' => ['required', 'string', 'min:2', 'max:40', 'regex:/^[a-zA-Z]+$/'],
+                'dni' => ['required', 'regex:/^[0-9]{8}[A-Za-z]$/'],
+                'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+                'password' => ['required', 'confirmed', 'min:8', 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d@$!%*?&]{8,}$/'],
+                'phone' => ['nullable', 'regex:/^\+?[0-9]{9,12}$/'],
+                'country' => ['nullable', 'string'],
+                'about' => ['nullable', 'string', 'min:20', 'max:250'],
+            ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'lastname' => $request->lastname,
-            'dni' => $request->dni,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+            // Crear el usuario
+            $user = User::create([
+                'name' => $validated['name'],
+                'lastname' => $validated['lastname'],
+                'dni' => $validated['dni'],
+                'email' => $validated['email'],
+                'password' => Hash::make($validated['password']),
+                'phone' => $validated['phone'],
+                'country' => $validated['country'],
+                'about' => $validated['about'],
+            ]);
 
-        return response()->json(['message' => 'Usuario registrado correctamente']);
+            // Respuesta de éxito
+            return response()->json(['message' => 'Usuario registrado correctamente'], 200);
+
+        } catch (ValidationException $e) {
+            // Captura cualquier error de validación
+            return response()->json([
+                'message' => 'Error de validación',
+                'errors' => $e->errors(),
+            ], 422);
+
+        } catch (\Exception $e) {
+            // Captura cualquier otro error durante el registro
+            return response()->json([
+                'message' => 'Ocurrió un error al registrar el usuario',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
+
+
+
 }

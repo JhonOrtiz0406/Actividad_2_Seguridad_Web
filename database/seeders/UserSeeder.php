@@ -12,10 +12,9 @@ class UserSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run()
+    public function run() : void
     {
-        User::create([
-            'name' => 'Usuario Prueba',
+        User::factory()->create([
             'email' => 'seguridadweb@campusviu.es',
             'password' => Hash::make('S3gur1d4d?W3b'),
         ]);
