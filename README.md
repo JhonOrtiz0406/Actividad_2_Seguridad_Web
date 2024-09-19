@@ -1,66 +1,91 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+## Actividdad 2 - Seguridad Web - Logeo y Registro
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Este proyecto tiene como objetivo desarrollar una API basada en Laravel para la gestión de usuarios y autenticación, todo enfocado en garantizar medidas de seguridad adecuadas en el contexto a nivel de backend.
 
-## About Laravel
+A continuación, describo los pasos necesarios para poner en marcha el proyecto, desde la instalación hasta la ejecución de peticiones mediante JSON.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+# Instalación del Proyecto
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 1. Clonar el repositorio
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+El repositorio es público el cual podría acceder mediante la siguiente URL.
 
-## Learning Laravel
+* https://github.com/JhonOrtiz0406/Actividad_2_Seguridad_Web.git
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 2. Instalar dependencias con Composer
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Instalamos las dependencias necesarias ejecutando el siguiente comando:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+> composer install 
 
-## Laravel Sponsors
+**NOTA**: Es fundamental si no tiene configurado su CMD con consola BASH, le recomiendo inicializarla y ejecutarlo.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## 3. Configuración del archivo .env
 
-### Premium Partners
+Como al momento de subir el proyecto genera problemas con que cargue el .env, para ello, coloco una copia con nombre 
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+>**.env.example**
 
-## Contributing
+ese archivo, renombralo por **.env**
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+#### Se deja las variables de entorno usadas en la elaboracion del proyecto para que no genere inconvenientes al momento de realizar sus respectivas pruebas
 
-## Code of Conduct
+## 4. Ejecutar las migraciones
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Las migraciones son esenciales para crear las tablas necesarias en la base de datos. Ejecuta el siguiente comando para aplicar las migraciones:
 
-## Security Vulnerabilities
+>php artisan migrate
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+*NOTA: Nuevamente en consola bash*
 
-## License
+## 5. Ejecutar Seeders
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Para agregar datos de prueba, como el usuario de ejemplo, ejecuta el seeder que configuraste previamente 
+
+>php artisan db:seed
+
+Esto creará un usuario con las siguientes credenciales:
+
+* **Email**: seguridadweb@campusviu.es
+* **Contraseña**: S3gur1d4d?W3b
+
+## 6. Iniciar el servidor de desarrollo
+
+Ahora, podemos iniciar el servidor local de desarrollo con:
+>php artisan serve
+
+El proyecto estará disponible en http://localhost:8000.
+
+#### **NOTA:** Lo anterior se usaria para ejecutarse en local y no contenerizado
+
+## 7. Realizar Peticiones JSON a la API
+
+Con el servidor corriendo, podemos hacer peticiones POST a las rutas **/api/register** y **/api/login** utilizando herramientas como Postman.
+
+### Ejemplo de Petición POST para Registro
+
+* URL: http://localhost:8000/api/register
+* Metodo: POST
+* Request **JSON** (Request con Datos de Prueba): 
+
+>{"name": "Jhon","lastname": "Orti","dni": "10029000000","email": "seguridadweb@campusviu.es","password": "S3gur1d4d?W3b","password_confirmation": "S3gur1d4d?W3b","phone": "+3218433333","country": "Colombia","about": "Soy un desarrollador backend"}
+
+### Ejemplo de Petición POST para Login
+
+* URL: http://localhost:8000/api/login
+* Metodo: POST
+* Request **JSON** (Request con Datos de Prueba):
+
+>{"email": "seguridadweb@campusviu.es","password": "S3gur1d4d?W3b"}
+
+## Comandos Útiles (Local sin contenerizar)
+
+### Limpiar Caché:
+* >php artisan cache:clear
+* >php artisan config:clear
+
+### Refrescar Migraciones (Elimina y recrea las tablas):
+* >php artisan migrate:fresh
+
+### LEjecutar Seeders nuevamente:
+* >php artisan db:seed
