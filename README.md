@@ -18,7 +18,6 @@ Instalamos las dependencias necesarias ejecutando el siguiente comando:
 
 > composer install 
 
-**NOTA**: Es fundamental si no tiene configurado su CMD con consola BASH, le recomiendo inicializarla y ejecutarlo.
 
 ## 3. Configuración del archivo .env
 
@@ -35,8 +34,6 @@ ese archivo, renombralo por **.env**
 Las migraciones son esenciales para crear las tablas necesarias en la base de datos. Ejecuta el siguiente comando para aplicar las migraciones:
 
 >php artisan migrate
-
-*NOTA: Nuevamente en consola bash*
 
 ## 5. Ejecutar Seeders
 
@@ -87,5 +84,5 @@ Con el servidor corriendo, podemos hacer peticiones POST a las rutas **/api/regi
 ### Refrescar Migraciones (Elimina y recrea las tablas):
 * >php artisan migrate:fresh
 
-### LEjecutar Seeders nuevamente:
+### Ejecutar Seeders nuevamente:
 * >php artisan db:seed
