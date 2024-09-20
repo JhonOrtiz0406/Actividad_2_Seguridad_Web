@@ -1,0 +1,69 @@
+{
+	"info": {
+		"_postman_id": "ccaad26b-9ba8-4364-b0e6-10035391315c",
+		"name": "Actividad 2 - Seguridad Web",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "15186037",
+		"_collection_link": "https://blue-comet-948154.postman.co/workspace/Maestria~349da0cb-1af3-4f4b-9da5-fc20dba5d437/collection/15186037-ccaad26b-9ba8-4364-b0e6-10035391315c?action=share&source=collection_link&creator=15186037"
+	},
+	"item": [
+		{
+			"name": "Register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Juan\",\r\n    \"lastname\": \"Perez\",\r\n    \"dni\": \"12345678Z\",\r\n    \"email\": \"seguridadweb@campusviu.es\",\r\n    \"password\": \"S3gur1d4d?W3b\",\r\n    \"password_confirmation\": \"S3gur1d4d?W3b\",\r\n    \"phone\": \"+123456789\",\r\n    \"country\": \"Spain\",\r\n    \"about\": \"Soy un desarrollador backend\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"seguridadweb@campusviu.es\",\r\n    \"password\": \"S3gur1d4d?W3b\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"login"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
