@@ -1,15 +1,37 @@
 <template>
-    <form @submit.prevent="login">
-        <div v-if="error" class="error">{{ error }}</div>
+    <div class="card">
+        <div class="card-body">
+            <h3 class="card-title">Iniciar sesión</h3>
+            <form @submit.prevent="login">
+                <!-- Mostrar mensaje de éxito -->
+                <div v-if="successMessage" class="alert alert-success">{{ successMessage }}</div>
 
-        <input type="email" v-model="email" placeholder="Correo" required />
-        <div v-if="errors.email" class="error">{{ errors.email }}</div>
+                <!-- Mostrar errores de validación -->
+                <div v-if="errors.length" class="alert alert-danger">
+                    <ul>
+                        <li v-for="error in errors" :key="error">{{ error }}</li>
+                    </ul>
+                </div>
 
-        <input type="password" v-model="password" placeholder="Contraseña" required minlength="8" />
-        <div v-if="errors.password" class="error">{{ errors.password }}</div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Correo:</label>
+                    <input type="email" v-model="email" class="form-control" id="email" placeholder="Correo" required/>
+                </div>
 
-        <button type="submit">Iniciar sesión</button>
-    </form>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Contraseña:</label>
+                    <input type="password" v-model="password" class="form-control" id="password"
+                           placeholder="Contraseña" required minlength="8"/>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Iniciar sesión</button>
+            </form>
+
+            <div class="mt-3 text-center">
+                <p>¿Usuario no registrado? <a href="/register">Registrarse</a></p>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -20,8 +42,8 @@ export default {
         return {
             email: '',
             password: '',
-            error: null,
-            errors: {},
+            successMessage: '',
+            errors: [],
         };
     },
     methods: {
@@ -30,41 +52,40 @@ export default {
             return re.test(email);
         },
         async login() {
-            // Limpiar errores
-            this.errors = {};
+            this.errors = [];
+            this.successMessage = '';
 
-            // Validar correo
             if (!this.validateEmail(this.email)) {
-                this.errors.email = 'El correo no es válido.';
+                this.errors.push('El correo no es válido.');
                 return;
             }
 
-            // Validar contraseña
             if (this.password.length < 8) {
-                this.errors.password = 'La contraseña debe tener al menos 8 caracteres.';
+                this.errors.push('La contraseña debe tener al menos 8 caracteres.');
                 return;
             }
 
-            // Hacer la petición a la API si las validaciones pasan
             try {
                 const response = await axios.post('/api/login', {
                     email: this.email,
                     password: this.password
                 });
-                alert('Login exitoso');
+                this.successMessage = '¡Acceso OK! Login exitoso.';
             } catch (error) {
-                console.error(error);
-                alert('Error en el login');
+                if (error.response && error.response.status === 422) {
+                    this.errors = Object.values(error.response.data.errors).flat();
+                } else {
+                    this.errors.push('Ocurrió un error inesperado.');
+                }
             }
-        },
-    },
+        }
+    }
 };
 </script>
 
 <style scoped>
-.error {
-    color: red;
-    font-size: 12px;
-    margin-bottom: 10px;
+.card {
+    max-width: 400px;
+    margin: auto;
 }
 </style>
